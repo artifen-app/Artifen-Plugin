@@ -1,0 +1,21 @@
+{
+  "name": "artifen",
+  "interface": {
+    "displayName": "Artifen"
+  },
+  "plugins": [
+    {
+      "name": "artifen",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/artifen-app/Artifen-Plugin.git",
+        "ref": "dev"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

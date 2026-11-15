@@ -1,0 +1,16 @@
+{
+  "name": "artifen",
+  "description": "Build and host sites on Artifen, from one HTML page to a full-stack app with a database, sign-in, files, email, AI, and payments. Bundles the Artifen skill and connects the Artifen MCP server.",
+  "owner": {
+    "name": "Leeor Nahum",
+    "url": "https://github.com/LeeorNahum"
+  },
+  "plugins": [
+    {
+      "name": "artifen",
+      "displayName": "Artifen",
+      "description": "Build and host sites on Artifen, from one HTML page to a full-stack app with a database, sign-in, files, email, AI, and payments. Bundles the Artifen skill and connects the Artifen MCP server.",
+      "source": "./"
+    }
+  ]
+}

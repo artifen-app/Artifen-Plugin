@@ -138,7 +138,7 @@ One `apply_site_patch` call with `add_starting_project: true` adds the starting 
 3. Apply the patch with `add_starting_project: true`, moving every text file under `public/` with `*** Move to:` hunks. Keep `artifen.data.json` at the root, where its rules are read.
 4. Delete the root copies of the binary files with `delete_site_files`.
 
-Data saved through the data store stays where it is, and the app's pages keep using it with the same script, so nothing moves and nothing is lost. Files left at the root are no longer served. `public/index.html` answers `/` until `app/routes/home.tsx` takes its place, and `404.html` is no longer the not-found page. A site that already has a `package.json` is refused.
+Data saved through the data store stays where it is, and the app's pages keep using it with the same script, so nothing moves and nothing is lost. Files left at the root are no longer served. `public/index.html` keeps answering `/` ahead of the starting app's own home route, so the page looks the same right after the change, and the starting app's sample notes page is not shown at `/`. To move the home page into the app later, delete `public/index.html` in that change. `404.html` is no longer the not-found page. A site that already has a `package.json` is refused.
 
 ## APIs And An MCP Endpoint
 

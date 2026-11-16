@@ -1,6 +1,6 @@
 # Limits
 
-What a site's server code can do in one request, what to build somewhere else, and what happens when a plan's allowance runs out.
+What a live app's code can do in one request, what to build somewhere else, and what happens when a plan's allowance runs out.
 
 ## One Request
 

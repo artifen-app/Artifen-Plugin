@@ -60,7 +60,7 @@ Start a new session afterwards so your agent picks up the new skill and tools.
 
 ## What your agent can do
 
-Create sites, change their files, check each build, publish a site's preview, list and restore earlier versions, read build and server logs, query a site's data, store secrets, upload files, and read and answer comments. Sites in Trash can be restored for 30 days. Who can open a site, custom domains, billing, and deleting a site for good are yours to change in the [Artifen app](https://preview.web.artifen.app).
+Create sites, change their files, check each build, publish a site's preview, list and restore earlier versions, read build and server logs, query a site's data, store secrets, upload files, read and answer comments, archive sites nobody uses, or pin the ones you keep coming back to. Sites in Trash can be restored for 30 days. Who can open a site, custom domains, billing, and deleting a site for good are yours to change in the [Artifen app](https://preview.web.artifen.app).
 
 ## Help
 

@@ -8,4 +8,5 @@ An Agent Skill that teaches an agent to build and host sites on [Artifen](https:
 | `references/site-stack.md` | Writing code for a full-stack site |
 | `references/errors.md` | What to do after each error |
 | `references/shell.md` | The command line and Git |
+| `references/page-data.md` | Saving data from a page |
 | `references/limits.md` | What a site can do in one request, and plan allowances |

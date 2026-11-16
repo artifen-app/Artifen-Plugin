@@ -21,15 +21,15 @@ Every refusal carries `code`, `message`, `hint`, and sometimes `details`, and a 
 | `patch_deletes_files` | Patches cannot delete. Delete those paths with `delete_site_files`, then send the patch without its `*** Delete File:` hunks |
 | `file_too_large` | The file is over the per-file limit in `details`. Make it smaller, for example by compressing an image, and send it again |
 | `payload_too_large` | The call carries too much. Send fewer files per call, or send large files as `source_url` or through an upload link |
-| `quota_exceeded` | A plan allowance is used up, named in `details.allowance`. Tell the person what the message says. Remove things only with their agreement. The workspace's payer changes the plan in the Artifen app, unless the message says no plan allows more |
-| `limit_reached` | A limit that is the same on every plan, named in `details.limit`. A new account's limits lift on the date in `details`. Otherwise make room within the same site or account, such as by deleting what the person no longer needs, with their agreement. Never make another site or account to get past it |
+| `quota_exceeded` | A plan allowance is used up, named in `details.allowance`. Tell the person what the message says. When it is the plan's total of sites, offer to archive or delete sites they no longer use. Remove things only with their agreement. The workspace's payer changes the plan in the Artifen app, unless the message says no plan allows more |
+| `limit_reached` | A limit named in `details.limit`. For `pinned_live_apps`, unpin another live app with `update_site` first, if the person agrees. A new account's limits lift on the date in `details`. Otherwise make room within the same site or account, such as by deleting what the person no longer needs, with their agreement. Never make another site or account to get past it |
 | `rate_limited` | Wait `details.retry_after_ms`, then try once more, and combine changes into fewer calls. When the wait is long, tell the person when it can be done and carry on with what does not need it |
 | `try_again` | Something was still finishing. Try again in a moment. When `details.change_landed` is `unknown`, read the site first, since the change may already be there. After a failed `create_site`, `details.site_created` says whether a site exists, and when it is absent, list the workspace's sites before creating again |
 | `site_trashed` | The site is in Trash. Restore it with `restore_site` if the person wants to work on it again |
 | `site_suspended` | The site was suspended. Nothing an agent can fix. Its owner sees why in the site's settings in the Artifen app |
-| `site_archived` | The site is archived, so its files cannot change. If the person wants to work on it again, unarchive it with `update_site` and `archived: false`, tell them if `archived_in_its_place` names a site that was archived to make room, then try again |
-| `nothing_to_publish` | A private site's changes are already live, and a shared site's preview already matches live. Nothing to do |
-| `build_failed` | Publishing stopped, because the preview's version did not build or a migration failed on the live data. Fix what `details` names, such as a migration that assumes data live does not have, let the change build, then publish again. Live keeps serving what it served |
+| `site_archived` | The site is archived, so its files cannot change. When the person wants to work on it again, unarchive it with `update_site` and `archived: false`, tell them about any site `archived_in_its_place` names, then try again |
+| `nothing_to_publish` | A private site's changes are already published, and a shared site's preview already matches what is published. Nothing to do |
+| `build_failed` | Publishing stopped, because the preview's version did not build or a migration failed on the published data. Fix what `details` names, such as a migration that assumes data live does not have, let the change build, then publish again. The site's address keeps serving what it served |
 | `query_not_read_only` | Send one `SELECT`, `WITH`, or `EXPLAIN` statement. Data changes belong in the site's code and migrations |
 | `query_failed` | The SQL did not run. Fix what the message names, such as a table or column, and run it again. Read `migrations/` for the schema |
 | `secret_name_invalid` | Use capital letters, digits, and underscores, starting with a letter, such as `MAPS_API_KEY`. Names starting with `ARTIFEN_` are Artifen's |
@@ -56,6 +56,6 @@ A failed build is not a refusal. The change is saved as a new version, the addre
 | `routes` | A module in `app/routes` that `app/routes.ts` does not list |
 | `imports` | An import from `react-router-dom` or `@remix-run/*`. Import from `react-router` |
 | `migrations` | A migration that does not apply after the ones before it, or that uses a statement migrations cannot run |
-| `build` | Anything else the build stopped on, including bindings in `wrangler.jsonc` a site does not get, and, for a site with no `package.json`, a file only a build can serve |
+| `build` | Anything else the build stopped on, including bindings in `wrangler.jsonc` a site does not get, an invalid schedule, an invalid `artifen.data.json`, and, for a site with no `package.json`, a file only a build can serve |
 
 `read_site_logs` with `source: "build"` and the `build_id` gives the whole log.

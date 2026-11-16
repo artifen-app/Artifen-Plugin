@@ -20,19 +20,21 @@ When the tools are missing and you cannot run `npx artifen`, tell the person the
 ## Create A Site
 
 1. Call `list_workspaces` and pick one where `can_create_sites` is true. When several qualify and the person has not said which, ask, since the workspace owns the site and decides who else sees it.
-2. Choose where it starts, `start_from`:
+2. Choose where it starts, `start_from`. People see two kinds of site, pages and live apps:
 
    | The site | `start_from` |
    | --- | --- |
-   | Runs entirely in the browser and saves nothing other visitors see: a page, a slideshow, a game, a calculator | `files`: plain HTML, CSS, and JavaScript, served exactly as sent, with no build |
-   | Saves data that visitors share, signs people in, runs code on the server, sends email, uses AI, takes payments, runs on a schedule, or serves an API or MCP endpoint | `template`: Artifen's starting app, React Router with server rendering, Tailwind, a database, and live updates |
+   | A page: a slideshow, a game, a calculator, a list people check off, a poll, a sign-up sheet. It runs in the browser, and it can save entries through Artifen's data store and sign people in | `files`: plain HTML, CSS, and JavaScript, served exactly as sent, with no build |
+   | A live app: it has logic of its own, such as pages made on request, its own database tables and queries beyond saving entries, payments, scheduled jobs, email, AI, or its own API or MCP endpoint | `template`: Artifen's starting app, React Router with server rendering, Tailwind, a database, and live updates |
 
-   A site that saves anything for other people to see, such as check-offs, notes, or sign-ups, starts from `template` and keeps it in the database, never in the site's own files, where it would collide with your edits. What one visitor keeps only for themselves can stay in their browser's own storage.
+   Data a page saves for other people, such as check-offs, votes, notes, or sign-ups, goes in the data store, as [page data](references/page-data.md) shows, and the site stays a page. Never write it into the site's own files, where your next edit would collide with it. What one visitor keeps only for themselves can stay in their browser's own storage.
+
+   With the person, say page or live app, never template, server code, or database. Pages and live apps both count toward a plan's sites, and only live apps toward its live apps. Before building a live app, or a change that turns a page into one, tell the person in plain words that it becomes one of their plan's live apps, that the Artifen app shows how many their plan has in use, and that once the plan's number is reached, the live app used least recently is archived to make room. Prefer a page when it does what they asked.
 
 3. Call `create_site`.
-   - Give every site, in its own code, a page title and a meta description that name this site in real words, an icon, and a share preview image with `og:title`, `og:description`, and `og:image`, so it reads well in tabs, search results, and shared links. With `files`, put the `<title>`, `<meta>`, and `<link rel="icon">` tags in each page beside the image files. With `template`, the site stack shows where.
+   - Give every site, in its own code, a page title and a meta description that name it in real words, and an icon, with `og:title` and `og:description` matching them. Add a share preview image (`og:image`) only when the page is made to be shared or the person asks. The `title` given to `create_site` is only the starting name: after each build that is published, the home page's title and meta description become the site's title and description in Artifen, and its address follows the title. So rename a site by changing its page title, since no tool sets them. A title or description the owner edits in the app is kept through later builds. With `files`, put the `<title>`, `<meta>`, and `<link rel="icon">` tags in each page beside the image files. With `template`, the site stack shows where.
    - With `files`, send `index.html` and every file the site needs in one call. Keep `package.json` out of the root, since it turns the site into an app that must build, and keep out TypeScript, JSX, Sass, and other files only a build can serve, which fail the build. There is no fallback page, so a client-side router needs hash routes or one HTML file per route. A `404.html` becomes the not-found page.
-   - A site started from files cannot later become the template app at the same address. When such a site needs server features, create a new site from the template, and tell the person its address will be new.
+   - A page becomes a live app at the same address only once its files form an app, and the starting app's files are added only when a site is created. So when a page needs to become a live app, the plain way is a new site from the template: offer it, tell the person its address will be new, and offer to archive the old page.
    - With `template`, files sent with the create replace the template's files at the same paths, so create it with none or only new files, then read the new site's `AGENTS.md`, `app/routes.ts`, and the sample pages before changing them. Read [the site stack](references/site-stack.md) before writing any code for it.
 4. Check `change.build` in the result (see Every Change Builds), then give the person `site.url`.
 
@@ -53,7 +55,7 @@ To find a site the person means, call `list_sites` with words from it as `query`
 - **Exact edits first.** `edit_site_file` replaces `old_string`, which must appear exactly once in the file's current content. Copy it from a fresh read, never from memory.
 - **Several files together.** `apply_site_patch` adds and changes files as one version, all or nothing. It never deletes. Use `delete_site_files` with exact paths for that.
 - **Whole files need a full read.** `write_site_file` replaces an existing file only after you read all of it, following `next_offset` until it is null, and refuses one that changed since (`conflict`). A read made in another conversation through the same app can count as yours, so read the file again just before replacing it.
-- **One change per intent.** Put every file of one change in one call. Each change makes a version and a build, and open pages show it once the build succeeds.
+- **One change per intent.** Put every file of one change in one call. Each change makes a version and a build, and pages show it on their next load once the build succeeds.
 
 ## Every Change Builds
 
@@ -82,9 +84,11 @@ Images, fonts, audio, video, and PDFs never travel as `content`. Never put base6
 
 ## Preview And Publish
 
-While a site is private, it has no preview, and every change goes live at `site.url` at once. Once the person shares it beyond invited people, changes land in its preview instead, at `site.preview_url`, which shows a Preview badge and has its own copy of the database, its own secrets, email that reaches only the owner, and test payments. A preview starts with no secrets, so when a site that uses secrets is shared, set each one for `preview` too, with test keys. `publish_site` sends the preview live and applies its database migrations to the live data, and if anything fails, the address keeps serving what it served before.
+Artifen adds a small Report site link at the bottom right of shared published pages, and a Preview badge at the bottom left of previews, so keep those corners free.
 
-After changing a shared site, give the person `preview_url` to check, and publish when they want the change live. `nothing_to_publish` means the site is private, so its changes are already live, or the preview matches what is live.
+While a site is private, it has no preview, and every change is published at `site.url` at once. Once the person shares it beyond invited people, changes land in its preview instead, at `site.preview_url`, which shows a Preview badge and has its own copy of the database, its own secrets, email that reaches only the owner, and test payments. A preview starts with no secrets, so when a site that uses secrets is shared, set each one for `preview` too, with test keys. `publish_site` makes the preview the version served at the site's address and applies its database migrations to the published data, and if anything fails, the address keeps serving what it served before.
+
+After changing a shared site, give the person `preview_url` to check, and publish when they want the change at the site's address. `nothing_to_publish` means the site is private, so its changes are already published, or the preview matches what is published.
 
 ## History
 
@@ -92,14 +96,20 @@ Every change is a version. `list_site_versions` lists them newest first, with bo
 
 ## Logs, Data, Secrets, And Comments
 
-- `read_site_logs` reads a build's log (`source: "build"`) or what the site's server code logged (`source: "server"`), for the live site or its preview (`slot`).
-- `query_site_data` runs one read-only SQL query on the live database or the preview's copy. Data changes go through the site's own code and migrations.
-- `set_site_secret` stores a key the site's server code reads by name, separately for `live` and `preview`, which should hold test keys. A private site has only `live`, and `read_site`'s `secrets` shows which slot holds each name. When the person pastes a key into the chat, store it as they ask. Never repeat its value in a reply or write it into a file. `delete_site_secret` removes one.
+- `read_site_logs` reads a build's log (`source: "build"`) or what a live app's code logged (`source: "server"`), for the live site or its preview (`slot`).
+- `query_site_data` runs one read-only SQL query on the published site's database or the preview's copy (`slot`: `live` or `preview`). Data changes go through the site's own code and migrations.
+- `set_site_secret` stores a key a live app's code reads by name, separately for the published site (`slot: "live"`) and its preview (`slot: "preview"`), which should hold test keys. A private site has only the published one, and `read_site`'s `secrets` shows which slot holds each name. When the person pastes a key into the chat, store it as they ask. Never repeat its value in a reply or write it into a file. `delete_site_secret` removes one.
 - `list_site_comments` reads what people left on the site's pages, and `reply_to_site_comment` answers one as the person.
 
 ## Delete And Restore
 
-Call `delete_site` only when the person asks to delete the site itself. It moves the site to Trash and its address stops at once. Pass on what the result's `undo` says: until when it can come back, and how. `restore_site` brings it back with its files, versions, data, and address, and so does Trash in the Artifen app. A site whose workspace was deleted comes back only through Trash in the app, where the person chooses its new workspace. To set aside a site nobody uses without deleting it, archive it with `update_site` (`archived: true`). Its address and pages keep working and a live app stops running until it is unarchived. `update_site` also unarchives a site and pins it.
+Call `delete_site` only when the person asks to delete the site itself. It moves the site to Trash and its address stops at once. Tell the person the date in `undo` until which it can come back, and that you or Trash in the Artifen app can bring it back. `restore_site` brings it back with its files, versions, data, and address, and so does Trash in the Artifen app. A site whose workspace was deleted comes back only through Trash in the app, where the person chooses its new workspace.
+
+## Archive And Pin
+
+Archiving tidies and deleting frees room. `update_site` with `archived: true` archives a site and loses nothing: it keeps its address and its pages still open, a page that saves data shows what it has but takes no new entries, and a live app's own logic stops running and stops counting toward the plan's live apps. Archived sites still count toward the plan's total of sites and its storage, which only deleting frees. Suggest archiving for sites nobody uses.
+
+`archived: false` brings a site back. When that would pass a plan limit, the site used least recently is archived in its place: tell the person which one from `archived_in_its_place`, which is null when none moved or when the one that moved is a site they cannot open. Artifen also archives sites nobody visited or changed for a while, and `pinned: true` keeps a site out of that when someone in its workspace pins it. A plan pins fewer live apps than it runs, so a refused pin means unpinning another first.
 
 ## With A Shell
 
@@ -111,7 +121,7 @@ Tell the person what matters to them, such as the address, who can open it, and 
 
 When a request runs into a limit, an allowance, or something only the app does, say so in a sentence and offer the closest way that works: a plain static version, the work split into smaller pieces or batches, the heavy part run somewhere else that the site calls, the plan that allows it, or the step they take in the app.
 
-Work within the limits rather than around them: never spread one site over several, make extra sites or accounts, or retry in a loop to get past an allowance or a refusal. Plan allowances and limits change, so read them from results and from an error's `details`, never from memory. At a limit nothing is lost, and things are removed only with the person's agreement. Read [the limits](references/limits.md) when an allowance refuses a call, when a site's pages fail in use, and before building anything long-running.
+Work within the limits rather than around them: never spread one site over several, make extra sites or accounts, or retry in a loop to get past an allowance or a refusal. Plan allowances change, so read them from results and from an error's `details`, never from memory. At a limit nothing is lost, and things are removed only with the person's agreement. Read [the limits](references/limits.md) when an allowance refuses a call, when a site's pages fail in use, and before building anything long-running.
 
 ## Errors
 

@@ -17,6 +17,9 @@ codex plugin add artifen@artifen
 
 # Gemini CLI
 gemini extensions install https://github.com/artifen-app/Artifen-Plugin --ref dev
+
+# Antigravity CLI
+git clone -b dev https://github.com/artifen-app/Artifen-Plugin artifen-plugin && agy plugin install ./artifen-plugin
 ```
 
 Inside a Claude Code session, `/plugin marketplace add artifen-app/Artifen-Plugin#dev` and `/plugin install artifen@artifen` do the same.
@@ -31,6 +34,7 @@ The first time your agent uses Artifen, your browser opens to sign in to Artifen
 - **Claude Code**: run `/mcp`, choose `plugin:artifen:artifen`, then Authenticate.
 - **Codex**: run `codex mcp login artifen`.
 - **Gemini CLI**: run `/mcp auth artifen`.
+- **Antigravity CLI**: your browser opens to sign in when Artifen first connects.
 
 The connection reaches every workspace you belong to and every site shared with you, with your role in each. You can disconnect an app at any time under Connected agents in the Artifen app's settings.
 
@@ -47,6 +51,9 @@ codex plugin add artifen@artifen
 
 # Gemini CLI
 gemini extensions update artifen
+
+# Antigravity CLI
+git -C artifen-plugin pull --ff-only && agy plugin uninstall artifen && agy plugin install ./artifen-plugin
 ```
 
 Start a new session afterwards so your agent picks up the new skill and tools.

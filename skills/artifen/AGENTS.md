@@ -10,6 +10,7 @@
 | `references/site-stack.md` | Writing code for a site that starts from the template: what each build checks, the layout, and everything `@artifen/site` provides |
 | `references/errors.md` | The next move for every error code and every build step |
 | `references/shell.md` | The command line and Git, for agents that can run commands |
+| `references/limits.md` | One request's CPU time, what to build outside a site, and how plan allowances show up |
 
 ## Editing
 

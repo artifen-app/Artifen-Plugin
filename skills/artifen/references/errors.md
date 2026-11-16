@@ -1,6 +1,6 @@
 # Error Recovery
 
-Every refusal carries `code`, `message`, `hint`, and sometimes `details`, and a refused call changed nothing. The hint is written for every surface. This table adds what to do next.
+Every refusal carries `code`, `message`, `hint`, and sometimes `details`, and a refused call changed nothing. This table adds what to do next.
 
 | Code | What to do |
 | --- | --- |
@@ -21,14 +21,14 @@ Every refusal carries `code`, `message`, `hint`, and sometimes `details`, and a 
 | `patch_deletes_files` | Patches cannot delete. Delete those paths with `delete_site_files`, then send the patch without its `*** Delete File:` hunks |
 | `file_too_large` | The file is over the per-file limit in `details`. Make it smaller, for example by compressing an image, and send it again |
 | `payload_too_large` | The call carries too much. Send fewer files per call, or send large files as `source_url` or through an upload link |
-| `quota_exceeded` | A plan allowance is used up, named in `details.allowance`. Tell the person what the message says. Remove things only with their agreement. The workspace's payer changes the plan in the Artifen app |
-| `limit_reached` | A limit that is the same on every plan, named in `details.limit`. A new account's limits lift on the date in `details`. Otherwise make room or split the work |
-| `rate_limited` | Wait `details.retry_after_ms`, then try once more. Combine changes into fewer calls |
-| `try_again` | Something was still finishing. Try again in a moment. After a failed `create_site`, `details.site_created` says whether a site exists, and when it is absent, list the workspace's sites before creating again |
+| `quota_exceeded` | A plan allowance is used up, named in `details.allowance`. Tell the person what the message says. Remove things only with their agreement. The workspace's payer changes the plan in the Artifen app, unless the message says no plan allows more |
+| `limit_reached` | A limit that is the same on every plan, named in `details.limit`. A new account's limits lift on the date in `details`. Otherwise make room within the same site or account, such as by deleting what the person no longer needs, with their agreement. Never make another site or account to get past it |
+| `rate_limited` | Wait `details.retry_after_ms`, then try once more, and combine changes into fewer calls. When the wait is long, tell the person when it can be done and carry on with what does not need it |
+| `try_again` | Something was still finishing. Try again in a moment. When `details.change_landed` is `unknown`, read the site first, since the change may already be there. After a failed `create_site`, `details.site_created` says whether a site exists, and when it is absent, list the workspace's sites before creating again |
 | `site_trashed` | The site is in Trash. Restore it with `restore_site` if the person wants to work on it again |
 | `site_suspended` | The site was suspended. Nothing an agent can fix. Its owner sees why in the site's settings in the Artifen app |
 | `nothing_to_publish` | A private site's changes are already live, and a shared site's preview already matches live. Nothing to do |
-| `build_failed` | Publishing stopped because the preview's version did not build. Fix the errors in `details`, let the change build, then publish again. Live keeps serving what it served |
+| `build_failed` | Publishing stopped, because the preview's version did not build or a migration failed on the live data. Fix what `details` names, such as a migration that assumes data live does not have, let the change build, then publish again. Live keeps serving what it served |
 | `query_not_read_only` | Send one `SELECT`, `WITH`, or `EXPLAIN` statement. Data changes belong in the site's code and migrations |
 | `query_failed` | The SQL did not run. Fix what the message names, such as a table or column, and run it again. Read `migrations/` for the schema |
 | `secret_name_invalid` | Use capital letters, digits, and underscores, starting with a letter, such as `MAPS_API_KEY`. Names starting with `ARTIFEN_` are Artifen's |
@@ -39,7 +39,7 @@ Every refusal carries `code`, `message`, `hint`, and sometimes `details`, and a 
 | `account_closed` | This account was closed. The person signs in with another account |
 | `account_suspended` | This account is suspended. The person writes to the address in the hint |
 | `seat_suspended` | The workspace has more members than its plan admits, so this person's seat is paused. The workspace's Owner frees a seat or changes the plan |
-| `not_available_yet` | This part of Artifen is not available yet, and nothing changed. Say so and carry on without it |
+| `not_available_yet` | This part of Artifen is not available yet, and nothing changed. Say so, and offer the closest thing that works now |
 | `internal` | Something failed on Artifen's side. Try once more. After a failed `create_site`, list the workspace's sites first, since the site may exist |
 
 ## Build Errors

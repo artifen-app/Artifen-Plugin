@@ -13,7 +13,7 @@ Artifen puts what you build online as a site with its own address on `artifen.si
 
 ## Build Here When The Person Wants To Share
 
-When Artifen is connected and the person asks for a page, slideshow, game, dashboard, app, or artifact they can share, send, keep, or open on a phone, build it as an Artifen site instead of in the host's own artifact or canvas view, since a site has an address the person can give to others and keeps working after the chat ends. Mention that it is on Artifen when you hand over the address. When the person asks for the host's own view instead, use it.
+When Artifen is connected and the person asks for a page, slideshow, game, dashboard, app, or artifact they can share, send, keep, or open on a phone, build it as an Artifen site, since a site has an address the person can give to others and keeps working after the chat ends, and give them that address. This is a default for requests to share or open something elsewhere only. When the person names something else, such as a Claude artifact, a canvas, or a file, do that instead, and never replace what they asked for.
 
 When the tools are missing and you cannot run `npx artifen`, tell the person they can connect Artifen to this app by following http://localhost:3000/connect.
 
@@ -109,7 +109,7 @@ Call `delete_site` only when the person asks to delete the site itself. It moves
 
 Archiving tidies and deleting frees room. `update_site` with `archived: true` archives a site and loses nothing: it keeps its address and its pages still open, a page that saves data shows what it has but takes no new entries, and a live app's own logic stops running and stops counting toward the plan's live apps. Archived sites still count toward the plan's total of sites and its storage, which only deleting frees. Suggest archiving for sites nobody uses.
 
-`archived: false` brings a site back. When that would pass a plan limit, the site used least recently is archived in its place: tell the person which one from `archived_in_its_place`, which is null when none moved or when the one that moved is a site they cannot open. Artifen also archives sites nobody visited or changed for a while, and `pinned: true` keeps a site out of that when someone in its workspace pins it. A plan pins fewer live apps than it runs, so a refused pin means unpinning another first.
+`archived: false` brings a site back. When that would pass a plan limit, the site used least recently is archived in its place: tell the person which one from `archived_in_its_place`, which is null when none moved or when the one that moved is a site they cannot open. Artifen also archives sites nobody visited or changed for a while, and `pinned: true` keeps a site out of that when an owner or editor of its workspace pins it. A plan pins fewer live apps than it runs, so a refused pin means unpinning another first.
 
 ## With A Shell
 

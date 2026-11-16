@@ -23,7 +23,7 @@ Build that part outside Artifen and have the site call it, keeping its keys with
 
 ## Plan Allowances
 
-Each workspace's plan sets allowances for what its sites keep and use. Never state a number from memory. The workspace's payer sees their usage, across the workspaces they pay for, in the Artifen app under Settings, then Billing, and changes the plan there.
+Each workspace's plan sets allowances for what its sites keep and use. Never state a number from memory. The workspace's payer sees their usage, across the workspaces they pay for, in the Artifen app under Settings, then Usage, and changes the plan under Settings, then Billing.
 
 - **A tool call past an allowance** answers `quota_exceeded` and changes nothing. `details.allowance` names the allowance, and `details` may add numbers such as `limit`, `used`, and `renews_at`. Tell the person what the message says. Remove things only with their agreement.
 - **Sites past the plan's site allowance**, the newest first, refuse changes, publishing, and upload links that way, and their server features pause. They still serve their pages, and reading and deleting them still work. Restoring a site from Trash needs room under the allowance.

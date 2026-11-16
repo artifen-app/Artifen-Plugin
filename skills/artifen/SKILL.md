@@ -34,7 +34,7 @@ When the tools are missing and you cannot run `npx artifen`, tell the person the
 3. Call `create_site`.
    - Give every site, in its own code, a page title and a meta description that name it in real words, and an icon, with `og:title` and `og:description` matching them. Add a share preview image (`og:image`) only when the page is made to be shared or the person asks. The `title` given to `create_site` is only the starting name: after each build that is published, the home page's title and meta description become the site's title and description in Artifen, and its address follows the title. So rename a site by changing its page title, since no tool sets them. A title or description the owner edits in the app is kept through later builds. With `files`, put the `<title>`, `<meta>`, and `<link rel="icon">` tags in each page beside the image files. With `template`, the site stack shows where.
    - With `files`, send `index.html` and every file the site needs in one call. Keep `package.json` out of the root, since it turns the site into an app that must build, and keep out TypeScript, JSX, Sass, and other files only a build can serve, which fail the build. There is no fallback page, so a client-side router needs hash routes or one HTML file per route. A `404.html` becomes the not-found page.
-   - A page becomes a live app at the same address only once its files form an app, and the starting app's files are added only when a site is created. So when a page needs to become a live app, the plain way is a new site from the template: offer it, tell the person its address will be new, and offer to archive the old page.
+   - A page becomes a live app at its own address with one `apply_site_patch` call with `add_starting_project: true`: Artifen's starting app is added, titled with the site's title, and the same patch moves the page's files under `public/` with `*** Move to:` hunks. Read [the site stack](references/site-stack.md) before doing it, and tell the person first, as above.
    - With `template`, files sent with the create replace the template's files at the same paths, so create it with none or only new files, then read the new site's `AGENTS.md`, `app/routes.ts`, and the sample pages before changing them. Read [the site stack](references/site-stack.md) before writing any code for it.
 4. Check `change.build` in the result (see Every Change Builds), then give the person `site.url`.
 
@@ -103,7 +103,7 @@ Every change is a version. `list_site_versions` lists them newest first, with bo
 
 ## Delete And Restore
 
-Call `delete_site` only when the person asks to delete the site itself. It moves the site to Trash and its address stops at once. Tell the person the date in `undo` until which it can come back, and that you or Trash in the Artifen app can bring it back. `restore_site` brings it back with its files, versions, data, and address, and so does Trash in the Artifen app. A site whose workspace was deleted comes back only through Trash in the app, where the person chooses its new workspace.
+Call `delete_site` only when the person asks to delete the site itself. It moves the site to Trash and its address stops at once. Tell the person the date in `undo` until which it can come back, and that you or Trash in the Artifen app, under Settings, can bring it back. `restore_site` brings it back with its files, versions, data, and address, and so does Trash in the Artifen app. A site whose workspace was deleted comes back only through Trash in the app, where the person chooses its new workspace.
 
 ## Archive And Pin
 

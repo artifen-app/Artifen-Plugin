@@ -30,7 +30,7 @@ The starting notes page is a sample to replace.
 
 ## Database
 
-Each site has its own SQLite database, and its preview has a separate copy seeded from live. Use it from server code: loaders, actions, API routes, and scheduled runs.
+Each site has its own SQLite database, and its preview has a separate copy seeded from live. Use it from server code: loaders, actions, API routes, and scheduled runs. Whatever visitors save for others to see goes here, never into the site's own files.
 
 ```ts
 import { database } from "@artifen/site";
@@ -136,4 +136,4 @@ The starting app serves its own MCP server at `/mcp`. Add tools in `app/mcp.serv
 
 ## Page Titles And Link Previews
 
-Each route's `meta` export sets its tab title, description, and link preview tags, such as `[{ title: SITE_TITLE }, { name: "description", content: "..." }, { property: "og:image", content: "/og.png" }]`.
+Each route's `meta` export sets its tab title, description, and link preview tags, such as `[{ title: SITE_TITLE }, { name: "description", content: "..." }, { property: "og:image", content: "/og.png" }]`. `SITE_TITLE` in `app/site.ts` starts as the site's title. Put the icon and the preview image in a `public/` folder at the site's root, which the starting app does not have yet, where `public/icon.svg` is served at `/icon.svg`, and add a `links` export to `app/root.tsx`, such as `export const links = () => [{ rel: "icon", href: "/icon.svg" }];`, with your own file names. Link previews need an absolute `og:image` address, so build it in the loader from `site().host`.

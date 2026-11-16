@@ -85,7 +85,7 @@ Writes through `database()` reach every open page at once. `status` is `live` wh
 - The `id` is the same on every visit to this site and different on every other site. Store it to know whose rows are whose. A member who also uses visitor sign-in has a different `id` for each, and while both are signed in the site sees the member. `name` can be null.
 - A page or action meant for the owner checks the role it needs in its loader or action, such as `visitor()?.role === "owner"`. A live query answers as the person it opened with until it reconnects, which suits rows filtered to each visitor, so data only some roles may see comes from a loader or an action instead.
 - On a site open to anyone, the owner arrives as an unidentified visitor until they sign in as a member. Put a small sign-in link for the owner and other members, such as in the footer, to `/__artifen/member?return=/path`, which signs members in with Artifen when they click it. On a private site and on a preview, everyone who gets in is a member and needs no member link, though `visitor()` can still be null there: treat null as someone not identified.
-- Link to `/__artifen/visitor/sign-in?return=/path` to sign a visitor in, and to `/__artifen/visitor/sign-out` to sign them out.
+- Link to `/__artifen/visitor/sign-in?return=/path` to sign a visitor in, and to `/__artifen/visitor/sign-out` to sign them out. A sign-out happens only from a person's own click on a link or form, never from a prefetch, a timer, or a background request.
 - Link a member to `/__artifen/member/sign-out?return=/path` to sign them out of the site's address. On a site open to everyone they then see it as anyone does, or as the visitor they signed in as. On a private site or a preview, the next page signs them in again while they are signed in to Artifen. Use a plain link or form for any of these, not a router's `<Link>`. `@artifen/site/links` builds the four addresses (`memberSignInUrl`, `memberSignOutUrl`, `visitorSignInUrl`, `visitorSignOutUrl`) and can be imported from a page.
 - `site()` returns `{ siteId, slot, host, appUrl }` for the address serving the request. `appUrl` is the site's page in the Artifen app, for a link that takes its owner there.
 
@@ -128,6 +128,17 @@ declare namespace Cloudflare {
 ## Scheduled Jobs
 
 Add cron expressions to `triggers.crons` in `wrangler.jsonc`, such as `"crons": ["0 8 * * *"]`, and put the work in the `scheduled` handler in `workers/app.ts`. Times are UTC. Write each expression as five numeric fields: minute 0 to 59, hour 0 to 23, day 1 to 31, month 1 to 12, and weekday 0 to 7, with `*`, ranges, `/step`, and commas. Names such as `MON-FRI` and shorthands such as `@daily` fail the build as `INVALID_CRON`, at the expression's line. A preview runs its schedules too, against its own database.
+
+## Turning A Page Into A Live App
+
+One `apply_site_patch` call with `add_starting_project: true` adds the starting app, titled with the site's title, and applies the patch on top, as one version and one build.
+
+1. Copy images and other binary files to `public/` first, while the site is still a page, since a patch moves text files only: `write_site_file` with `source_url` set to the download link `read_site` gives for each.
+2. Move or delete the site's own `tsconfig.json`, `vite.config.ts`, or `wrangler.jsonc`, which would replace the starting app's and can break its build.
+3. Apply the patch with `add_starting_project: true`, moving every text file under `public/` with `*** Move to:` hunks. Keep `artifen.data.json` at the root, where its rules are read.
+4. Delete the root copies of the binary files with `delete_site_files`.
+
+Files left at the root are no longer served. `public/index.html` answers `/` until `app/routes/home.tsx` takes its place, and `404.html` is no longer the not-found page. A site that already has a `package.json` is refused.
 
 ## APIs And An MCP Endpoint
 

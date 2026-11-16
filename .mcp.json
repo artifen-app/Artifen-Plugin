@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "artifen": {
+      "type": "http",
+      "url": "https://preview.mcp.artifen.app/mcp"
+    }
+  }
+}

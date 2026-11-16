@@ -60,9 +60,13 @@ To find a site the person means, call `list_sites` with words from it as `query`
 Every change returns `build` with a `status`:
 
 - `succeeded`: `url` in the result serves the change.
-- `failed`: the change is saved as a version, and the address keeps serving its last working version. Each entry in `build.errors` names the `step` that failed, the `file`, `line`, and `message`. Fix them and send the fix as the next change.
+- `failed`: the change is saved as a version, and the address keeps serving its last working version. Each entry in `build.errors` names the `step` that failed, the `file`, `line`, and `message`. Fix them and send the fix as the next change. When an error's `rule` is `safe_browsing_checks_used`, the day's safe-browsing checks are used and no change fixes it: tell the person, and send the change again after midnight UTC.
 - `queued` or `running`: not finished. Check `latest_build` from `read_site`, or `read_site_logs` with `source: "build"`, before telling the person it works.
-- `superseded`: a newer change reached the address first.
+- `superseded`: this change was not deployed by this build. When `build.covered_by` is null, a newer change reached the address first. Otherwise `covered_by` names the build that carries this change, with that build's status:
+  - `succeeded`: the address serves the change.
+  - `failed`: read that build's errors with `read_site_logs` and `source: "build"`, and send a fix as the next change.
+  - `queued` or `running`: read the site again with `read_site` until its build finishes, before telling the person it works.
+  - `superseded`: a newer build took its place. Read `latest_build` from `read_site`.
 
 ## Files That Are Not Text
 

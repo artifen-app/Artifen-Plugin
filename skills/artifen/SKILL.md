@@ -103,7 +103,7 @@ Every change is a version. `list_site_versions` lists them newest first, with bo
 
 ## Delete And Restore
 
-Call `delete_site` only when the person asks to delete the site itself. It moves the site to Trash and its address stops at once. Tell the person the date in `undo` until which it can come back, and that you or Trash in the Artifen app can bring it back. `restore_site` brings it back with its files, versions, data, and address, and so does Trash in the Artifen app. A site whose workspace was deleted comes back only through Trash in the app, where the person chooses its new workspace.
+Call `delete_site` only when the person asks to delete the site itself. It moves the site to Trash and its address stops at once. Tell the person the date in `undo` until which it can come back, and that you or Trash in the Artifen app, under Settings, can bring it back. `restore_site` brings it back with its files, versions, data, and address, and so does Trash in the Artifen app. A site whose workspace was deleted comes back only through Trash in the app, where the person chooses its new workspace.
 
 ## Archive And Pin
 

@@ -1,6 +1,6 @@
 {
   "name": "artifen",
-  "version": "0.1.0-local.05747416d15d",
+  "version": "0.1.0-local.19b9df868786",
   "description": "Build and host sites on Artifen, from one HTML page to a full-stack app with a database, sign-in, files, email, AI, and payments. Bundles the Artifen skill and connects the Artifen MCP server.",
   "mcpServers": {
     "artifen": {

@@ -4,9 +4,9 @@ Every refusal carries `code`, `message`, `hint`, and sometimes `details`, and a 
 
 | Code | What to do |
 | --- | --- |
-| `unauthorized` | The connection's sign-in expired or was revoked. Ask the person to sign in to Artifen again through this app's connection settings, or, for the command line, to run `npx artifen login`. When `details.reason` is `connection_revoked`, they disconnected this app under Connected agents in the Artifen app's settings and must allow it again there. Never ask for a password or token in chat |
+| `unauthorized` | The connection's sign-in expired or was revoked. Ask the person to sign in to Artifen again through this app's connection settings, or, for the command line, to run `npx artifen login`. When `details.reason` is `connection_revoked`, they disconnected this app under Connected agents in the Artifen app's settings and must allow it again there. When it is `credential_predates_revocation`, they allowed this app again after it last signed in, so nothing needs changing in the Artifen app, only a new sign-in from this app's connection settings. Never ask for a password or token in chat |
 | `forbidden` | The person's role on the site or workspace does not allow this, such as a Viewer changing files. Say which role it needs and that an Owner can grant it in the Artifen app |
-| `app_only` | Sharing, roles, custom domains, GitHub sync, workspace members, and deleting a site for good are changed in the Artifen app. Tell the person where, from the hint |
+| `app_only` | This happens only in the Artifen app. Tell the person what the message says and where it points them. For a site's sharing, roles, domains, or GitHub, that is the site's page, `site.app_url` from `read_site` |
 | `not_found` | The ID does not exist or is not available to this person. List workspaces or sites, or read the site, for current IDs and paths. Never guess an ID |
 | `address_not_found` | The HTTP API has no operation at that method and path. Check them against `/openapi.json` |
 | `validation_failed` | An argument is malformed. `details` names the field and the rule. Fix that field and send again |

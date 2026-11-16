@@ -72,14 +72,22 @@ const { rows, status } = useLiveQuery<Guest>("guests", {}, { initialRows: loader
 
 Writes through `database()` reach every open page at once. `status` is `live` while changes arrive, and the hook reconnects after a dropped connection.
 
-## Visitor Sign-In
+## Who Is Visiting
 
-Artifen signs visitors in for the site, with Google, a passkey, a password, or a guest name.
+`visitor()` returns the person on the page, `{ id, name, kind, role }`, or null for someone not identified:
 
-- `visitor()` returns the signed-in visitor, `{ id, name, kind }` with `kind` either `identity` or `guest`, or null. `name` can be null. The `id` is the same on every visit to this site and different on every other site. Store it to know whose rows are whose.
-- Nothing tells site code whether a visitor owns the site, and anyone with the link can be the first to claim it. When a page should be the owner's alone, ask the person how they will prove it, such as a passphrase set with `set_site_secret` for both `live` and `preview`, and remember only a visitor whose `kind` is `identity`. The owner can also read the data with `query_site_data`, with no page at all.
-- Link to `/__artifen/visitor/sign-in?return=/path` to sign someone in, and to `/__artifen/visitor/sign-out` to sign them out.
-- `site()` returns `{ siteId, slot, host }` for the address serving the request. It and `visitor()` are null in local development.
+| `kind` | Who | `role` |
+| --- | --- | --- |
+| `member` | Someone with a role on the site, such as its owner, its workspace's members, or people it was shared with, signed in with their Artifen account | `owner`, `editor`, `commenter`, or `viewer` |
+| `identity` | Someone signed in through the site's visitor sign-in, with Google, a passkey, or a password | `visitor` |
+| `guest` | A name given without an account | `visitor` |
+
+- The `id` is the same on every visit to this site and different on every other site. Store it to know whose rows are whose. A member who also uses visitor sign-in has a different `id` for each, and while both are signed in the site sees the member. `name` can be null.
+- A page or action meant for the owner checks the role it needs in its loader or action, such as `visitor()?.role === "owner"`. A live query answers as the person it opened with until it reconnects, which suits rows filtered to each visitor, so data only some roles may see comes from a loader or an action instead.
+- On a site open to anyone, the owner arrives as an unidentified visitor until they sign in as a member. Show anyone whose `role` is `visitor`, or who is null, a link or button to `/__artifen/member?return=/path`, which signs members in with Artifen when they click it. On a private site and on a preview, everyone who gets in is a member and needs no member link, though `visitor()` can still be null there: treat null as someone not identified.
+- Link to `/__artifen/visitor/sign-in?return=/path` to sign a visitor in, and to `/__artifen/visitor/sign-out` to sign them out.
+- `site()` returns `{ siteId, slot, host, appUrl }` for the address serving the request. `appUrl` is the site's page in the Artifen app, for a link that takes its owner there.
+- `visitor()` and `site()` are null in local development.
 
 ## Files, Email, AI, Payments, And Comments
 
@@ -90,8 +98,8 @@ import { ai, comments, email, files, payments } from "@artifen/site";
 - `files.put(key, body, { contentType })`, `files.get(key)`, `files.delete(...keys)`, and `files.list({ prefix })` keep files the site stores, such as visitors' uploads or video. Each is served on the site's own address at `/__artifen/files/<key>`, with range requests for video.
 - `email.send({ to, subject, html, text, replyTo })` sends from the site. From the preview, every message goes to the site's owner instead.
 - `ai.generate({ system, messages: [{ role, content }], maxTokens })` returns `{ text, usage }` on the site's AI allowance.
-- `payments.createCheckout({ lineItems: [{ name, amountCents, currency, quantity }], successUrl, cancelUrl, customerEmail, metadata })` returns `{ id, url }`, a checkout page to send the visitor to. `payments.getCheckout(id)` says whether it was paid. `payments.refund({ paymentIntentId, amountCents })` refunds. A workspace Owner connects the workspace's payments account first, in the Artifen app under Settings, then Payments. The preview takes test payments.
-- `comments.list({ page })` and `comments.create({ page, body })` read and add comments on the site's pages. Adding one needs a signed-in visitor.
+- `payments.createCheckout({ lineItems: [{ name, amountCents, currency, quantity }], successUrl, cancelUrl, customerEmail, metadata })` returns `{ id, url }`, a checkout page to send the visitor to. `payments.getCheckout(id)` says whether it was paid. `payments.refund({ paymentIntentId, amountCents })` refunds. A workspace Owner connects the workspace's payments account first, in the Artifen app under Settings, then Payments. Real payments are not open on Artifen yet, so at the site's own address, `site.url`, all three fail with a message saying so, whether the site is private or shared. A preview takes test payments, and a site has one only once it is shared beyond the people invited to it. Tell the person this when they ask for payments, and leave the choice to share to them.
+- `comments.list({ page })` and `comments.create({ page, body })` read and add comments on the site's pages. Adding one needs the person signed in through visitor sign-in, and the comment shows that name. A member comments that way too, as a second sign-in. A private site has no visitor sign-in, so nobody can add comments from its pages.
 
 When the site's plan has used up an allowance, these answer with an error, and the site's pages keep serving.
 

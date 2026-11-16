@@ -1,0 +1,28 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "artifen",
+  "displayName": "Artifen",
+  "version": "0.1.0",
+  "description": "Build and host sites on Artifen, from one HTML page to a full-stack app with a database, sign-in, files, email, AI, and payments. Bundles the Artifen skill and connects the Artifen MCP server.",
+  "author": {
+    "name": "Leeor Nahum",
+    "url": "https://github.com/LeeorNahum"
+  },
+  "homepage": "https://artifen.app",
+  "repository": "https://github.com/artifen-app/Artifen-Plugin",
+  "license": "Apache-2.0",
+  "keywords": [
+    "artifen",
+    "sites",
+    "hosting",
+    "web-apps",
+    "mcp",
+    "agent-skills"
+  ],
+  "logo": "assets/icon.png",
+  "suggestedPrompts": [
+    "Make me a slideshow I can share",
+    "Build a guest list app where guests sign in to RSVP",
+    "Fix how my Artifen site looks on phones"
+  ]
+}

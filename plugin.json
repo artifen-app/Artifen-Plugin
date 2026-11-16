@@ -1,0 +1,35 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "artifen",
+  "version": "0.1.0",
+  "description": "Build and host sites on Artifen, from one HTML page to a full-stack app with a database, sign-in, files, email, AI, and payments. Bundles the Artifen skill and connects the Artifen MCP server.",
+  "author": {
+    "name": "Leeor Nahum",
+    "url": "https://github.com/LeeorNahum"
+  },
+  "homepage": "https://artifen.app",
+  "repository": "https://github.com/artifen-app/Artifen-Plugin",
+  "license": "Apache-2.0",
+  "keywords": ["artifen", "sites", "hosting", "web-apps", "mcp", "agent-skills"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Artifen",
+        "shortDescription": "Put what you build online as a site",
+        "longDescription": "Artifen hosts whatever your AI builds, from one HTML page to a full-stack app with a database, sign-in, files, email, AI, and payments, each at its own address. With this plugin, your AI can create a site in one of your workspaces, change its files, check each build, publish its preview, go back to an earlier version, and read its logs, data, and comments. A new site opens only for the people you invite, and you choose who else can open it in the Artifen app.",
+        "developerName": "Leeor Nahum",
+        "category": "Productivity",
+        "websiteURL": "https://artifen.app",
+        "privacyPolicyURL": "https://artifen.app/privacy",
+        "termsOfServiceURL": "https://artifen.app/terms",
+        "defaultPrompt": [
+          "Make me a slideshow I can share",
+          "Build a guest list app where guests sign in to RSVP",
+          "Fix how my Artifen site looks on phones"
+        ],
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/icon.png"
+      }
+    }
+  }
+}

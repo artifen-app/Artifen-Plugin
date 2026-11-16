@@ -96,7 +96,7 @@ import { ai, comments, email, files, payments } from "@artifen/site";
 ```
 
 - `files.put(key, body, { contentType })`, `files.get(key)`, `files.delete(...keys)`, and `files.list({ prefix })` keep files the site stores, such as visitors' uploads or video. Each is served on the site's own address at `/__artifen/files/<key>`, with range requests for video.
-- `email.send({ to, subject, html, text, replyTo })` sends from the site. From the preview, every message goes to the site's owner instead.
+- `email.send({ to, subject, html, text, replyTo })` sends from the site. Site code cannot look up the owner's address, so ask the person which address to send to. From the preview, every message goes to the site's owner instead.
 - `ai.generate({ system, messages: [{ role, content }], maxTokens })` returns `{ text, usage }` on the site's AI allowance.
 - `payments.createCheckout({ lineItems: [{ name, amountCents, currency, quantity }], successUrl, cancelUrl, customerEmail, metadata })` returns `{ id, url }`, a checkout page to send the visitor to. `payments.getCheckout(id)` returns `status`, `paymentStatus` (`paid` once the money has arrived), and `paymentIntentId`. To refund a paid checkout, pass that to `payments.refund({ paymentIntentId, amountCents })`, where `amountCents` is optional for a part refund. A workspace Owner connects the workspace's payments account first, in the Artifen app under Settings, then Payments. When a checkout at the site's own address fails with a message that payments are not open yet, tell the person: a preview takes test payments, and a site has one once it is shared beyond the people invited to it, which is their choice.
 - `comments.list({ page })` and `comments.create({ page, body })` read and add comments on the site's pages. Adding one needs someone signed in: a visitor comments under the name they signed in with, and a member under their own name, except a member whose role is `viewer`, who can comment only through visitor sign-in on a site open to everyone. Otherwise `comments.create` throws a message to show the person.
@@ -138,7 +138,7 @@ One `apply_site_patch` call with `add_starting_project: true` adds the starting 
 3. Apply the patch with `add_starting_project: true`, moving every text file under `public/` with `*** Move to:` hunks. Keep `artifen.data.json` at the root, where its rules are read.
 4. Delete the root copies of the binary files with `delete_site_files`.
 
-Files left at the root are no longer served. `public/index.html` answers `/` until `app/routes/home.tsx` takes its place, and `404.html` is no longer the not-found page. A site that already has a `package.json` is refused.
+Data saved through the data store stays where it is, and the app's pages keep using it with the same script, so nothing moves and nothing is lost. Files left at the root are no longer served. `public/index.html` answers `/` until `app/routes/home.tsx` takes its place, and `404.html` is no longer the not-found page. A site that already has a `package.json` is refused.
 
 ## APIs And An MCP Endpoint
 

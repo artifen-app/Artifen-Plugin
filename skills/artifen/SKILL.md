@@ -13,7 +13,7 @@ Artifen puts what you build online as a site with its own address on `artifen.si
 
 ## Build Here When The Person Wants To Share
 
-When Artifen is connected and the person asks for a page, slideshow, game, dashboard, app, or artifact they can share, send, keep, or open on a phone, build it as an Artifen site instead of in the host's own artifact or canvas view, since a site has an address the person can give to others and keeps working after the chat ends. Say that you are putting it on Artifen.
+When Artifen is connected and the person asks for a page, slideshow, game, dashboard, app, or artifact they can share, send, keep, or open on a phone, build it as an Artifen site instead of in the host's own artifact or canvas view, since a site has an address the person can give to others and keeps working after the chat ends. Mention that it is on Artifen when you hand over the address. When the person asks for the host's own view instead, use it.
 
 When the tools are missing and you cannot run `npx artifen`, tell the person they can connect Artifen to this app by following https://preview.artifen.app/connect.
 
@@ -27,22 +27,24 @@ When the tools are missing and you cannot run `npx artifen`, tell the person the
    | Runs entirely in the browser and saves nothing other visitors see: a page, a slideshow, a game, a calculator | `files`: plain HTML, CSS, and JavaScript, served exactly as sent, with no build |
    | Saves data that visitors share, signs people in, runs code on the server, sends email, uses AI, takes payments, runs on a schedule, or serves an API or MCP endpoint | `template`: Artifen's starting app, React Router with server rendering, Tailwind, a database, and live updates |
 
+   A site that saves anything for other people to see, such as check-offs, notes, or sign-ups, starts from `template` and keeps it in the database, never in the site's own files, where it would collide with your edits. What one visitor keeps only for themselves can stay in their browser's own storage.
+
 3. Call `create_site`.
+   - Give every site, in its own code, a page title and a meta description that name this site in real words, an icon, and a share preview image with `og:title`, `og:description`, and `og:image`, so it reads well in tabs, search results, and shared links. With `files`, put the `<title>`, `<meta>`, and `<link rel="icon">` tags in each page beside the image files. With `template`, the site stack shows where.
    - With `files`, send `index.html` and every file the site needs in one call. Keep `package.json` out of the root, since it turns the site into an app that must build, and keep out TypeScript, JSX, Sass, and other files only a build can serve, which fail the build. There is no fallback page, so a client-side router needs hash routes or one HTML file per route. A `404.html` becomes the not-found page.
+   - A site started from files cannot later become the template app at the same address. When such a site needs server features, create a new site from the template, and tell the person its address will be new.
    - With `template`, files sent with the create replace the template's files at the same paths, so create it with none or only new files, then read the new site's `AGENTS.md`, `app/routes.ts`, and the sample pages before changing them. Read [the site stack](references/site-stack.md) before writing any code for it.
 4. Check `change.build` in the result (see Every Change Builds), then give the person `site.url`.
 
-Each `create_site` call makes another site, so after a failure that may have landed, call `list_sites` before trying again.
+Each `create_site` call makes another site, so after a failure that may have landed, call `list_sites` before trying again, and carry on with the site if it exists.
 
 ## Who Can Open It
 
-A new site opens only for the person and anyone invited to it. Sharing, roles, workspace members, custom domains, GitHub sync, billing, and deleting a site for good are changed in the Artifen app, never by a tool. A tool call that reaches one of them answers `app_only`.
+A new site opens only for the members of its workspace and anyone invited to it. Sharing, roles, workspace members, custom domains, GitHub sync, billing, and deleting a site for good are changed in the Artifen app, never by a tool. A tool call that reaches one of them answers `app_only`.
 
-- Tell the person who can open the site now, from `site.access_level` (`private` is invited people only, `link` is anyone with the link, `public` is anyone, and found by search engines).
+- Tell the person who can open the site now, from `site.access_level` (`private` is the workspace's members and invited people, `link` is anyone with the link, `public` is anyone, and found by search engines).
 - Tell them where to change it: the site's page in the Artifen app, `site.app_url`, under Share. They can invite people by email, open it to anyone with the link, make it public, or let a room of people join with a QR code.
 - When you operate a browser the person is signed in to and they ask you to share the site, you may do it through that same Share dialog.
-
-For "make me a slideshow I can share": build it, give the link, and say it opens only for them until they choose Share, then Anyone with the link, in the app.
 
 ## Change A Site
 
@@ -76,7 +78,7 @@ Images, fonts, audio, video, and PDFs never travel as `content`. Never put base6
 
 ## Preview And Publish
 
-While a site is private, it has no preview, and every change goes live at `site.url` at once. Once the person shares it beyond invited people, changes land in its preview instead, at `site.preview_url`, which shows a Preview badge and has its own copy of the database, test secrets, email that reaches only the owner, and test payments. `publish_site` sends the preview live and applies its database migrations to the live data, and if anything fails, the address keeps serving what it served before.
+While a site is private, it has no preview, and every change goes live at `site.url` at once. Once the person shares it beyond invited people, changes land in its preview instead, at `site.preview_url`, which shows a Preview badge and has its own copy of the database, its own secrets, email that reaches only the owner, and test payments. A preview starts with no secrets, so when a site that uses secrets is shared, set each one for `preview` too, with test keys. `publish_site` sends the preview live and applies its database migrations to the live data, and if anything fails, the address keeps serving what it served before.
 
 After changing a shared site, give the person `preview_url` to check, and publish when they want the change live. `nothing_to_publish` means the site is private, so its changes are already live, or the preview matches what is live.
 
@@ -88,7 +90,7 @@ Every change is a version. `list_site_versions` lists them newest first, with bo
 
 - `read_site_logs` reads a build's log (`source: "build"`) or what the site's server code logged (`source: "server"`), for the live site or its preview (`slot`).
 - `query_site_data` runs one read-only SQL query on the live database or the preview's copy. Data changes go through the site's own code and migrations.
-- `set_site_secret` stores a key the site's server code reads by name, separately for `live` and `preview`, which should hold test keys. When the person pastes a key into the chat, store it as they ask. Never repeat its value in a reply or write it into a file. `delete_site_secret` removes one.
+- `set_site_secret` stores a key the site's server code reads by name, separately for `live` and `preview`, which should hold test keys. A private site has only `live`, and `read_site`'s `secrets` shows which slot holds each name. When the person pastes a key into the chat, store it as they ask. Never repeat its value in a reply or write it into a file. `delete_site_secret` removes one.
 - `list_site_comments` reads what people left on the site's pages, and `reply_to_site_comment` answers one as the person.
 
 ## Delete And Restore
@@ -99,8 +101,14 @@ Call `delete_site` only when the person asks to delete the site itself. It moves
 
 When you can run commands, `npx artifen` sends local files and whole folders, and `git clone` and `git push` work on a site's source, where each push makes a version and builds it. Read [the shell reference](references/shell.md) before using either.
 
+## When Something Does Not Fit
+
+Tell the person what matters to them, such as the address, who can open it, and what changed, in plain words. File names, settings, and terms from these references are for your code, not for them, unless they ask.
+
+When a request runs into a limit, an allowance, or something only the app does, say so in a sentence and offer the closest way that works: a plain static version, the work split into smaller pieces or batches, the heavy part run somewhere else that the site calls, the plan that allows it, or the step they take in the app.
+
+Work within the limits rather than around them: never spread one site over several, make extra sites or accounts, or retry in a loop to get past an allowance or a refusal. Plan allowances and limits change, so read them from results and from an error's `details`, never from memory. At a limit nothing is lost, and things are removed only with the person's agreement. Read [the limits](references/limits.md) when an allowance refuses a call, when a site's pages fail in use, and before building anything long-running.
+
 ## Errors
 
 Every refusal is `{ "error": { "code", "message", "hint", "details" } }`, and a refused call changed nothing. A failed build is not a refusal: its change is saved, as Every Change Builds says. Follow the hint, read `details` for the field or limit involved, and read [error recovery](references/errors.md) for what to do next on any code.
-
-Plan allowances and limits change, so read them from results and from an error's `details`, never from memory. At a limit nothing is lost. Remove things only with the person's agreement.

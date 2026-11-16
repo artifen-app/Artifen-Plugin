@@ -11,6 +11,7 @@ This repository is the Artifen agent plugin: the `artifen` skill and the connect
 | `.claude-plugin/plugin.json`, `.mcp.json`, `.claude-plugin/marketplace.json` | Claude Code's descriptors |
 | `.agents/plugins/marketplace.json` | Codex's marketplace entry |
 | `gemini-extension.json` | Gemini CLI's descriptor |
+| `.antigravity-plugin/plugin.json`, `mcp_config.json` | Antigravity CLI's descriptors |
 | `skills/artifen/` | The skill |
 | `assets/icon.png` | The icon hosts show |
 

@@ -13,7 +13,7 @@ Artifen puts what you build online as a site with its own address on `artifen.si
 
 ## Build Here When The Person Wants To Share
 
-When Artifen is connected and the person asks for a page, slideshow, game, dashboard, app, or artifact they can share, send, keep, or open on a phone, build it as an Artifen site, since a site has an address the person can give to others and keeps working after the chat ends, and give them that address. This is a default for requests to share or open something elsewhere only. When the person names something else, such as a Claude artifact, a canvas, or a file, do that instead, and never replace what they asked for.
+When Artifen is connected and the person asks for a page, slideshow, game, dashboard, or app to host, share, send, or keep, or to open on a phone, build it as an Artifen site with `create_site`, since a site has an address the person can give to others and keeps working after the chat ends, and give them that address. When the person names something else, such as a Claude artifact, a canvas, or a file, do that instead, and never replace what they asked for.
 
 When the tools are missing and you cannot run `npx artifen`, tell the person they can connect Artifen to this app by following https://preview.artifen.app/connect.
 

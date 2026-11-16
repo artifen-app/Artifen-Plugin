@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "artifen",
-  "version": "0.1.0-preview.a892c6b7e1df",
+  "version": "0.1.0-preview.4e62bb7f393b",
   "description": "Build and host sites on Artifen, from one HTML page to a full-stack app with a database, sign-in, files, email, AI, and payments. Bundles the Artifen skill and connects the Artifen MCP server.",
   "author": {
     "name": "Leeor Nahum",

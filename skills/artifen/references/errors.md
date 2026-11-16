@@ -27,6 +27,7 @@ Every refusal carries `code`, `message`, `hint`, and sometimes `details`, and a 
 | `try_again` | Something was still finishing. Try again in a moment. When `details.change_landed` is `unknown`, read the site first, since the change may already be there. After a failed `create_site`, `details.site_created` says whether a site exists, and when it is absent, list the workspace's sites before creating again |
 | `site_trashed` | The site is in Trash. Restore it with `restore_site` if the person wants to work on it again |
 | `site_suspended` | The site was suspended. Nothing an agent can fix. Its owner sees why in the site's settings in the Artifen app |
+| `site_archived` | The site is archived, so its files cannot change. If the person wants to work on it again, unarchive it with `update_site` and `archived: false`, tell them if `archived_in_its_place` names a live app that was archived to make room, then try again |
 | `nothing_to_publish` | A private site's changes are already live, and a shared site's preview already matches live. Nothing to do |
 | `build_failed` | Publishing stopped, because the preview's version did not build or a migration failed on the live data. Fix what `details` names, such as a migration that assumes data live does not have, let the change build, then publish again. Live keeps serving what it served |
 | `query_not_read_only` | Send one `SELECT`, `WITH`, or `EXPLAIN` statement. Data changes belong in the site's code and migrations |

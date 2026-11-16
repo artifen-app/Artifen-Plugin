@@ -32,12 +32,17 @@ A plain page can save and read data, such as votes, check-offs, notes, or sign-u
 ```
 
 - `artifen.data("<collection>")` gives `list({ cursor, limit })`, which answers `{ entries: [{ id, value, updatedAt }], cursor }` (up to 100 at a time, pass `cursor` on for more), `get(id)` (the entry or null), `set(id, value)` (answers `{ id, updatedAt }`), `add(value)` (answers `{ id, updatedAt }`), and `remove(id)` (answers `{ deleted }`).
-- A value is any JSON up to 16 KB. An ID is letters, digits, `-`, and `_`, up to 64 characters.
-- Entries come oldest first. There are no live updates, and every call, reads included, counts toward the plan's usage, so read again when the page opens or comes back into view, or at a slow interval, never every few seconds.
+- A value is any JSON up to 16 KB. Saved data counts toward the plan's database allowance. An ID is letters, digits, `-`, and `_`, up to 64 characters.
+- Entries come in order of their IDs, which is the order they were added when `add` made them. There are no live updates, and every call, reads included, counts toward the plan's usage, so read again when the page opens or comes back into view, or at a slow interval, never every few seconds.
 - `artifen.me()` answers `{ id, role }` for the person signed in, or null. `role` is a member's role on the site, or `visitor` for someone signed in through the site's visitor sign-in. `artifen.signIn()` starts the site's visitor sign-in. For a collection limited to a member role, such as `owner`, members sign in through a link to `/__artifen/member?return=/path` on a site open to anyone, and on a private site they already are.
 - Saves are limited per visitor and per site in a short time, answering `rate_limited`: wait a minute and try again.
 - A failed call throws an error with `code`, `status`, and `message`. Show its message to the person in the page.
 
 A shared site's published version and its preview each have their own data, and a preview starts with a copy of the published data. A private site has only the published data.
 
-Your tools cannot read or clear page data. When the person wants it exported or cleared, build that into the page, such as an export or clear control only the owner sees. While a site is archived or its plan's usage budget is used up, reads still work and saves are refused with a message saying why.
+## Reading, Clearing, And Limits
+
+- `query_site_data` reads a page's saved data: for a site with no database of its own, the database is one table, `entries` (`collection`, `owner`, `id`, `value` as JSON text, `updated_at`), where `owner` is the person's ID on the site in a collection kept per person and empty otherwise.
+- Your tools cannot change or clear entries. Someone who can change the site clears a whole collection in the Artifen app, on the site's Data tab, under "Saved by its pages", or the page itself has a delete or clear control.
+- Collections anyone can write to, `everyone` or `signed_in`, hold 10 MB together on the published site and on its preview, and a save past that answers `limit_reached` until entries are removed. All of a site's saved data stops at 100 MB.
+- While the plan's usage budget is used up, reads and deletes still work and only saves are refused. While a site is archived, every change is refused. The refusal's message says why.

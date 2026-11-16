@@ -1,6 +1,6 @@
 ---
 name: "artifen"
-description: "Use when building, publishing, updating, or fixing a site, web app, page, game, dashboard, or slideshow on Artifen (artifen.app, artifen.site), and whenever a task calls Artifen's tools such as create_site, write_site_file, or publish_site, or the `npx artifen` CLI. Also use whenever the person asks for an artifact, page, app, or slideshow they can share, send, or open on another device while Artifen is connected, even without naming Artifen. Teaches when to build on Artifen, how to start, write, and change a site from plain files to a full-stack app, publish it, and recover from every error."
+description: "Use when building, publishing, updating, or fixing a site, web app, page, game, dashboard, or slideshow on Artifen (artifen.app, artifen.site), and whenever a task calls Artifen's tools such as create_site, write_site_file, or publish_site, or the `npx artifen` CLI. Also use whenever the person asks for an artifact, page, app, or slideshow they can share, send, or open on another device while Artifen is connected, even without naming Artifen. Teaches when to build on Artifen, how to start, write, and change a site from plain files to a full-stack app, publish it, and recover from errors."
 license: "Apache-2.0"
 metadata:
   author: "Leeor Nahum"
@@ -29,17 +29,17 @@ When the tools are missing and you cannot run `npx artifen`, tell the person the
 
 3. Call `create_site`.
    - With `files`, send `index.html` and every file the site needs in one call. Keep `package.json` out of the root, since it turns the site into an app that must build, and keep out TypeScript, JSX, Sass, and other files only a build can serve, which fail the build. There is no fallback page, so a client-side router needs hash routes or one HTML file per route. A `404.html` becomes the not-found page.
-   - With `template`, read the new site's `AGENTS.md`, `app/routes.ts`, and the sample pages before changing them, since files you send with `create_site` replace the template's files at the same paths. Read [the site stack](references/site-stack.md) before writing any code for it.
+   - With `template`, files sent with the create replace the template's files at the same paths, so create it with none or only new files, then read the new site's `AGENTS.md`, `app/routes.ts`, and the sample pages before changing them. Read [the site stack](references/site-stack.md) before writing any code for it.
 4. Check `change.build` in the result (see Every Change Builds), then give the person `site.url`.
 
 Each `create_site` call makes another site, so after a failure that may have landed, call `list_sites` before trying again.
 
 ## Who Can Open It
 
-A new site opens only for the person and anyone invited to it. Sharing, roles, custom domains, GitHub sync, billing, and deleting a site for good are changed in the Artifen app, never by a tool. A tool call that reaches one of them answers `app_only`.
+A new site opens only for the person and anyone invited to it. Sharing, roles, workspace members, custom domains, GitHub sync, billing, and deleting a site for good are changed in the Artifen app, never by a tool. A tool call that reaches one of them answers `app_only`.
 
 - Tell the person who can open the site now, from `site.access_level` (`private` is invited people only, `link` is anyone with the link, `public` is anyone, and found by search engines).
-- Tell them where to change it: the site's page in the Artifen app, `https://preview.web.artifen.app/sites/<site id>`, under Share. They can invite people by email, open it to anyone with the link, make it public, or let a room of people join with a QR code.
+- Tell them where to change it: the site's page in the Artifen app, `site.app_url`, under Share. They can invite people by email, open it to anyone with the link, make it public, or let a room of people join with a QR code.
 - When you operate a browser the person is signed in to and they ask you to share the site, you may do it through that same Share dialog.
 
 For "make me a slideshow I can share": build it, give the link, and say it opens only for them until they choose Share, then Anyone with the link, in the app.
@@ -76,7 +76,7 @@ Images, fonts, audio, video, and PDFs never travel as `content`. Never put base6
 
 ## Preview And Publish
 
-While a site is private, every change goes live at `site.url` at once. Once the person shares it beyond invited people, changes land in its preview instead, at `site.preview_url`, which shows a Preview badge and has its own copy of the database, test secrets, email that reaches only the owner, and test payments. `publish_site` sends the preview live and applies its database migrations to the live data, and if anything fails, the address keeps serving what it served before.
+While a site is private, it has no preview, and every change goes live at `site.url` at once. Once the person shares it beyond invited people, changes land in its preview instead, at `site.preview_url`, which shows a Preview badge and has its own copy of the database, test secrets, email that reaches only the owner, and test payments. `publish_site` sends the preview live and applies its database migrations to the live data, and if anything fails, the address keeps serving what it served before.
 
 After changing a shared site, give the person `preview_url` to check, and publish when they want the change live. `nothing_to_publish` means the site is private, so its changes are already live, or the preview matches what is live.
 
@@ -93,7 +93,7 @@ Every change is a version. `list_site_versions` lists them newest first, with bo
 
 ## Delete And Restore
 
-Call `delete_site` only when the person asks to delete the site itself. It moves the site to Trash and its address stops at once. Tell the person the date in `purge_after`, when it is deleted for good, and that it can come back until then. `restore_site` brings it back with its files, versions, data, and address, and so does Trash in the Artifen app.
+Call `delete_site` only when the person asks to delete the site itself. It moves the site to Trash and its address stops at once. Pass on what the result's `undo` says: until when it can come back, and how. `restore_site` brings it back with its files, versions, data, and address, and so does Trash in the Artifen app. A site whose workspace was deleted comes back only through Trash in the app, where the person chooses its new workspace.
 
 ## With A Shell
 

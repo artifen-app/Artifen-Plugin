@@ -8,18 +8,19 @@ When you can run commands, the `artifen` command line sends files from disk, who
 
 ## Commands
 
-Add `--json` to get exactly one JSON document on standard output, the result or `{ "error": { "code", "message", "hint", "details" } }`. `npx artifen <command> --help` gives each command's options.
+Add `--json` to get exactly one JSON document on standard output, the result or `{ "error": { "code", "message", "hint", "details" } }`. `npx --yes artifen <command> --help` gives each command's options.
 
 | Task | Command |
 | --- | --- |
-| Create a site from a folder | `npx artifen sites create ./my-site --workspace <workspace id> --title "My site"` |
-| Write files or a folder into a site | `npx artifen files write <site> ./dist` |
-| Put one local file at a path | `npx artifen files upload <site> images/photo.jpg ./photo.jpg` |
-| Save a file exactly, binary included | `npx artifen files read <site> <path> --out <file>` |
-| Publish the preview | `npx artifen sites publish <site>` |
-| Make a Git credential | `npx artifen git credential <site>` |
+| Create a site from a folder | `npx --yes artifen sites create ./my-site --workspace <workspace id> --title "My site"` |
+| Create a site from the template | `npx --yes artifen sites create --template --workspace <workspace id> --title "My app"` |
+| Write files or a folder into a site | `npx --yes artifen files write <site> ./dist` |
+| Put one local file at a path | `npx --yes artifen files upload <site> images/photo.jpg ./photo.jpg` |
+| Save a file exactly, binary included | `npx --yes artifen files read <site> <path> --out <file>` |
+| Publish the preview | `npx --yes artifen sites publish <site>` |
+| Make a Git credential | `npx --yes artifen git credential <site>` |
 
-A `<site>` is a site's 8-character ID or any of its addresses. `sites create` starts from the files sent. To start from the template, create the site with the `create_site` tool and `start_from: "template"`, then clone it.
+A `<site>` is a site's 8-character ID or any of its addresses. `sites create` starts from exactly the files sent, and `sites create --template` from the template, where files given on top replace the template's files at the same paths. To build on the template locally, create it with no files, then clone it.
 
 Exit codes: 0 done, 1 failed (the error says why), 2 the command was not valid, 3 the change was saved and its build failed, 4 sign in first.
 
@@ -39,5 +40,7 @@ cd <folder>
 git config credential.helper ""
 git config --add credential.helper "!npx --yes artifen git credential <site>"
 ```
+
+The last two lines keep Git asking the command line for a credential on later pulls and pushes, rather than any helper or password saved on the computer.
 
 Each push makes a new version and builds it, the same as a tool change, and its result appears in `list_site_versions` and `read_site`'s `latest_build`. Pull before you push, since changes made through the tools or the app land as commits too. A push that would overwrite them is refused.

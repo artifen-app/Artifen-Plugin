@@ -38,6 +38,6 @@ A plain page can save and read data, such as votes, check-offs, notes, or sign-u
 - Saves are limited per visitor and per site in a short time, answering `rate_limited`: wait a minute and try again.
 - A failed call throws an error with `code`, `status`, and `message`. Show its message to the person in the page.
 
-A shared site's live address and its preview each have their own data, and a preview starts with a copy of live's. A private site has only live.
+A shared site's published version and its preview each have their own data, and a preview starts with a copy of the published data. A private site has only the published data.
 
 Your tools cannot read or clear page data. When the person wants it exported or cleared, build that into the page, such as an export or clear control only the owner sees. While a site is archived or its plan's usage budget is used up, reads still work and saves are refused with a message saying why.

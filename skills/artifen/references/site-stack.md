@@ -30,7 +30,7 @@ The starting notes page is a sample to replace.
 
 ## Database
 
-Each site has its own SQLite database, and its preview has a separate copy seeded from live. Use it from server code: loaders, actions, API routes, and scheduled runs. Whatever visitors save for others to see goes here, never into the site's own files.
+Each site has its own SQLite database, and its preview has a separate copy seeded from the published one. Use it from server code: loaders, actions, API routes, and scheduled runs. Whatever visitors save for others to see goes here, never into the site's own files.
 
 ```ts
 import { database } from "@artifen/site";
@@ -43,7 +43,7 @@ await database().batch([{ sql: "DELETE FROM rsvps WHERE guest_id = ?", params: [
 
 `batch` runs its statements in one transaction.
 
-Change tables only with migrations: a new SQL file in `migrations/` for each change, such as `migrations/0002_rsvps.sql`. They apply in name order, each once, when a version goes live, and a build fails when one does not apply after the ones before it. Never edit a migration that already ran, and leave transaction statements, `ATTACH`, `VACUUM`, and `PRAGMA` out of them.
+Change tables only with migrations: a new SQL file in `migrations/` for each change, such as `migrations/0002_rsvps.sql`. They apply in name order, each once, when a version is published, and a build fails when one does not apply after the ones before it. Never edit a migration that already ran, and leave transaction statements, `ATTACH`, `VACUUM`, and `PRAGMA` out of them.
 
 ## Live Updates
 

@@ -28,8 +28,8 @@ Every refusal carries `code`, `message`, `hint`, and sometimes `details`, and a 
 | `site_trashed` | The site is in Trash. Restore it with `restore_site` if the person wants to work on it again |
 | `site_suspended` | The site was suspended. Nothing an agent can fix. Its owner sees why in the site's settings in the Artifen app |
 | `site_archived` | The site is archived, so its files cannot change. When the person wants to work on it again, unarchive it with `update_site` and `archived: false`, tell them about any site `archived_in_its_place` names, then try again |
-| `nothing_to_publish` | A private site's changes are already live, and a shared site's preview already matches live. Nothing to do |
-| `build_failed` | Publishing stopped, because the preview's version did not build or a migration failed on the live data. Fix what `details` names, such as a migration that assumes data live does not have, let the change build, then publish again. Live keeps serving what it served |
+| `nothing_to_publish` | A private site's changes are already published, and a shared site's preview already matches what is published. Nothing to do |
+| `build_failed` | Publishing stopped, because the preview's version did not build or a migration failed on the published data. Fix what `details` names, such as a migration that assumes data live does not have, let the change build, then publish again. The site's address keeps serving what it served |
 | `query_not_read_only` | Send one `SELECT`, `WITH`, or `EXPLAIN` statement. Data changes belong in the site's code and migrations |
 | `query_failed` | The SQL did not run. Fix what the message names, such as a table or column, and run it again. Read `migrations/` for the schema |
 | `secret_name_invalid` | Use capital letters, digits, and underscores, starting with a letter, such as `MAPS_API_KEY`. Names starting with `ARTIFEN_` are Artifen's |

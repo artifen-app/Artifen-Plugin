@@ -97,7 +97,7 @@ Every change is a version. `list_site_versions` lists them newest first, with bo
 ## Logs, Data, Secrets, And Comments
 
 - `read_site_logs` reads a build's log (`source: "build"`) or what a live app's code logged (`source: "server"`), for the live site or its preview (`slot`).
-- `query_site_data` runs one read-only SQL query on the published site's database or the preview's copy (`slot`: `live` or `preview`). Data changes go through the site's own code and migrations.
+- `query_site_data` runs one read-only SQL query on the published site's database or the preview's copy (`slot`: `live` or `preview`). For a page, that is what it saved through the data store. Data changes go through the site's own code and migrations.
 - `set_site_secret` stores a key a live app's code reads by name, separately for the published site (`slot: "live"`) and its preview (`slot: "preview"`), which should hold test keys. A private site has only the published one, and `read_site`'s `secrets` shows which slot holds each name. When the person pastes a key into the chat, store it as they ask. Never repeat its value in a reply or write it into a file. `delete_site_secret` removes one.
 - `list_site_comments` reads what people left on the site's pages, and `reply_to_site_comment` answers one as the person.
 
@@ -107,7 +107,7 @@ Call `delete_site` only when the person asks to delete the site itself. It moves
 
 ## Archive And Pin
 
-Archiving tidies and deleting frees room. `update_site` with `archived: true` archives a site and loses nothing: it keeps its address and its pages still open, a page that saves data shows what it has but takes no new entries, and a live app's own logic stops running and stops counting toward the plan's live apps. Archived sites still count toward the plan's total of sites and its storage, which only deleting frees. Suggest archiving for sites nobody uses.
+Archiving tidies and deleting frees room. `update_site` with `archived: true` archives a site and loses nothing: it keeps its address and its pages still open, a page that saves data shows what it has but takes no new entries, and a live app's own logic stops running, so its saved pages open but their buttons and forms do nothing, and it stops counting toward the plan's live apps. Archived sites still count toward the plan's total of sites and its storage, which only deleting frees. Suggest archiving for sites nobody uses.
 
 `archived: false` brings a site back. When that would pass a plan limit, the site used least recently is archived in its place: tell the person which one from `archived_in_its_place`, which is null when none moved or when the one that moved is a site they cannot open. Artifen also archives sites nobody visited or changed for a while, and `pinned: true` keeps a site out of that when an owner or editor of its workspace pins it. A plan pins fewer live apps than it runs, so a refused pin means unpinning another first.
 

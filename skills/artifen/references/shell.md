@@ -19,6 +19,8 @@ Add `--json` to get exactly one JSON document on standard output, the result or 
 | Save a file exactly, binary included | `npx --yes artifen files read <site> <path> --out <file>` |
 | Publish the preview | `npx --yes artifen sites publish <site>` |
 | Make a Git credential | `npx --yes artifen git credential <site>` |
+| Call a private site from here | `curl -H "Artifen-Site-Key: $(npx --yes artifen keys temporary <site>)" https://<site address>/api/...` |
+| Make a key for a script elsewhere or a scheduled job | `npx --yes artifen keys create <site> "Nightly import"`, shown once |
 
 A `<site>` is a site's 8-character ID or any of its addresses. `sites create` starts from exactly the files sent, and `sites create --template` from the template, where files given on top replace the template's files at the same paths. To build on the template locally, create it with no files, then clone it. A clone cannot install or type-check on its own, since `@artifen/site` comes with each build: push, and read the build's errors. Never add `@artifen/site` to `package.json`.
 

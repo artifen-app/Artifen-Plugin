@@ -45,6 +45,6 @@ git config --add credential.helper "!npx --yes artifen git credential <site>"
 
 The last two lines keep Git asking the command line for a credential on later pulls and pushes, rather than any helper or password saved on the computer.
 
-Each push makes a new version and builds it, the same as a tool change, and its result appears in `list_site_versions` and `read_site`'s `latest_build`. Pull before you push, since changes made through the tools or the app land as commits too, and merge them. Never force-push: a forced push replaces the site's history and whatever others changed.
+Each push makes a new version and builds it, the same as a tool change, and its result appears in `list_site_versions` and `read_site`'s `latest_build`. Pull before you push, since changes made through the tools or the app land as commits too, and merge them. Never force-push: a forced push replaces the site's history and whatever others changed. One push carries at most 64 MB and 50,000 objects. To send a larger history, push an older commit first, for example `git push origin HEAD~50:main`, then the rest.
 
 A live app's stored file, a large file such as video it serves, goes in with `npx artifen files upload <site> <key> <file> --stored`, up to the plan's max upload size: it is sent in parts, running the command again carries an interrupted upload on, and it is served on the site's own address at `/__artifen/files/<key>`. Add `--preview` for the preview's stored files.

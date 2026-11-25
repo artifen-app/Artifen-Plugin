@@ -127,7 +127,7 @@ declare namespace Cloudflare {
 
 ## Scheduled Jobs
 
-Add cron expressions to `triggers.crons` in `wrangler.jsonc`, such as `"crons": ["0 8 * * *"]`, and put the work in the `scheduled` handler in `workers/app.ts`. Times are UTC. Write each expression as five numeric fields: minute 0 to 59, hour 0 to 23, day 1 to 31, month 1 to 12, and weekday 0 to 7, with `*`, ranges, `/step`, and commas. Names such as `MON-FRI` and shorthands such as `@daily` fail the build as `INVALID_CRON`, at the expression's line. A preview runs its schedules too, against its own database.
+Add cron expressions to `triggers.crons` in `wrangler.jsonc`, such as `"crons": ["0 8 * * *"]`, and put the work in the `scheduled` handler in `workers/app.ts`. Times are UTC. Write each expression as five numeric fields: minute 0 to 59, hour 0 to 23, day 1 to 31, month 1 to 12, and weekday 0 to 7, with `*`, ranges, `/step`, and commas. Names such as `MON-FRI` and shorthands such as `@daily` fail the build as `INVALID_CRON`, at the expression's line, and so does a list of more than 5 schedules: run several jobs from one schedule and tell them apart by the time in the `scheduled` handler. A preview runs its schedules too, against its own database.
 
 ## Turning A Page Into A Live App
 

@@ -4,7 +4,7 @@ description: "Use when building, publishing, updating, or fixing a site, web app
 license: "Apache-2.0"
 metadata:
   author: "Leeor Nahum"
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Artifen

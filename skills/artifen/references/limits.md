@@ -8,6 +8,8 @@ Each request to a site, and each scheduled run, gets at most 30 seconds of CPU t
 
 A request past either limit stops, and the visitor sees "This page took too long". A scheduled run past it stops too. Other requests to the site are not affected.
 
+Each site's code and saved data can be reached about 600 times a minute from one visitor's address and about 6,000 times a minute in all. While its server features are paused, its code can be reached 60 times a minute in all and 10 from one address. Each limit is counted separately in each region the visits come from. A live app's static files, such as its scripts, styles, and images, do not count. A request past a limit runs nothing until the minute is up: a visitor sees "This site is busy", and saved data, or a request with a site key, answers `rate_limited`. These limits are the same on every plan. Reading saved data and asking who is signed in do not count toward the plan's server requests, and saving or removing data does.
+
 - Keep work per request small: page through data, and let SQL filter and sort rather than code.
 - Split a long job across scheduled runs, each doing one batch and saving where it stopped.
 - When a build passes but a page fails in use, read the server log with `read_site_logs` and `source: "server"`.

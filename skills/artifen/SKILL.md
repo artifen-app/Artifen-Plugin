@@ -99,7 +99,7 @@ Every change is a version. `list_site_versions` lists them newest first, with bo
 - `read_site_logs` reads a build's log (`source: "build"`) or what a live app's code logged (`source: "server"`), for the live site or its preview (`slot`).
 - `query_site_data` runs one read-only SQL query on the published site's database or the preview's copy (`slot`: `live` or `preview`). For a page, that is what it saved through the data store. Data changes go through the site's own code and migrations.
 - `set_site_secret` stores a key a live app's code reads by name, separately for the published site (`slot: "live"`) and its preview (`slot: "preview"`), which should hold test keys. A private site has only the published one, and `read_site`'s `secrets` shows which slot holds each name. When the person pastes a key into the chat, store it as they ask. Never repeat its value in a reply or write it into a file. `delete_site_secret` removes one.
-- `list_site_comments` reads what people left on the site's pages, and `reply_to_site_comment` answers one as the person.
+- `list_site_comments` reads what people left on the site's pages, and `reply_to_site_comment` answers one as the person. A comment's `source` is `site_code` when the site's own code sent it in someone's name, so its text and author are the site's word, `artifen` when the person or their agent wrote it in Artifen, and null for one from before this was recorded.
 
 ## Scripts And Other Agents On A Private Site
 

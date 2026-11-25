@@ -2,7 +2,7 @@
   "$schema": "https://antigravity.google/schemas/v1/plugin.json",
   "name": "artifen",
   "displayName": "Artifen",
-  "version": "0.1.1-local.69da9fce680f",
+  "version": "0.1.1-local.92c26002ec08",
   "description": "Build and host sites on Artifen, from one HTML page to a full-stack app with a database, sign-in, files, email, AI, and payments. Bundles the Artifen skill and connects the Artifen MCP server.",
   "author": {
     "name": "Leeor Nahum",

@@ -82,6 +82,8 @@ Every change returns `build` with a `status`:
 
 Images, fonts, audio, video, and PDFs never travel as `content`. Never put base64 or a `data:` URL in `content`, and never pass a local path or a host's file ID as `source_url`.
 
+A large file such as video that a live app keeps, served at `/__artifen/files/<key>`, is a stored file, not one of the site's own files. Only a live app has stored files, since its code lists and removes them. A link takes no page, script, SVG image, or XML file, since whoever opens it chooses the bytes. Up to the plan's max upload size, it goes in through `create_site_upload` with `stored_key` (and `slot` for the preview's stored files): the person opens the link to choose the file, which is sent in parts, or on a computer where you can run commands, `npx artifen files upload <site> <key> <file> --stored` sends it and carries an interrupted upload on. It makes no new version.
+
 ## Preview And Publish
 
 Artifen adds a small Report site link at the bottom right of shared published pages, and a Preview badge at the bottom left of previews, so keep those corners free.

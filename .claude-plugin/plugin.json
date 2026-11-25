@@ -1,7 +1,7 @@
 {
   "name": "artifen",
   "displayName": "Artifen",
-  "version": "0.1.1-local.a668faa8dda9",
+  "version": "0.1.1-local.4c6c25da4990",
   "description": "Build and host sites on Artifen, from one HTML page to a full-stack app with a database, sign-in, files, email, AI, and payments. Bundles the Artifen skill and connects the Artifen MCP server.",
   "author": {
     "name": "Leeor Nahum",
